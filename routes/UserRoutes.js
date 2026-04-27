@@ -1,30 +1,30 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var UserController = require('../controllers/UserController.js');
+var UserController = require("../controllers/UserController.js");
 
 /*
  * GET
  */
-router.get('/', UserController.list);
+router.get("/", UserController.list);
 
 /*
  * GET
  */
-router.get('/:id', UserController.show);
+router.get("/:id", UserController.show);
 
 /*
  * POST
  */
-router.post('/', UserController.create);
+router.post("/", UserController.create);
 
 /*
  * PUT
  */
-router.put('/:id', UserController.update);
+router.put("/:id", UserController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', UserController.remove);
+router.delete("/:id", UserController.remove);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-var UserModel = require('../models/UserModel.js');
+var UserModel = require("../models/UserModel.js");
 
 /**
  * UserController.js
@@ -6,121 +6,120 @@ var UserModel = require('../models/UserModel.js');
  * @description :: Server-side logic for managing Users.
  */
 module.exports = {
-
-    /**
-     * UserController.list()
-     */
-    list: function (req, res) {
-        UserModel.find(function (err, Users) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting User.',
-                    error: err
-                });
-            }
-
-            return res.json(Users);
+  /**
+   * UserController.list()
+   */
+  list: function (req, res) {
+    UserModel.find(function (err, Users) {
+      if (err) {
+        return res.status(500).json({
+          message: "Error when getting User.",
+          error: err,
         });
-    },
+      }
 
-    /**
-     * UserController.show()
-     */
-    show: function (req, res) {
-        var id = req.params.id;
+      return res.json(Users);
+    });
+  },
 
-        UserModel.findOne({_id: id}, function (err, User) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting User.',
-                    error: err
-                });
-            }
+  /**
+   * UserController.show()
+   */
+  show: function (req, res) {
+    var id = req.params.id;
 
-            if (!User) {
-                return res.status(404).json({
-                    message: 'No such User'
-                });
-            }
-
-            return res.json(User);
+    UserModel.findOne({ _id: id }, function (err, User) {
+      if (err) {
+        return res.status(500).json({
+          message: "Error when getting User.",
+          error: err,
         });
-    },
+      }
 
-    /**
-     * UserController.create()
-     */
-    create: function (req, res) {
-        var User = new UserModel({
-			username : req.body.username,
-			email : req.body.email,
-			password : req.body.password
+      if (!User) {
+        return res.status(404).json({
+          message: "No such User",
         });
+      }
 
-        User.save(function (err, User) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating User',
-                    error: err
-                });
-            }
+      return res.json(User);
+    });
+  },
 
-            return res.status(201).json(User);
+  /**
+   * UserController.create()
+   */
+  create: function (req, res) {
+    var User = new UserModel({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    User.save(function (err, User) {
+      if (err) {
+        return res.status(500).json({
+          message: "Error when creating User",
+          error: err,
         });
-    },
+      }
 
-    /**
-     * UserController.update()
-     */
-    update: function (req, res) {
-        var id = req.params.id;
+      return res.status(201).json(User);
+    });
+  },
 
-        UserModel.findOne({_id: id}, function (err, User) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting User',
-                    error: err
-                });
-            }
+  /**
+   * UserController.update()
+   */
+  update: function (req, res) {
+    var id = req.params.id;
 
-            if (!User) {
-                return res.status(404).json({
-                    message: 'No such User'
-                });
-            }
-
-            User.username = req.body.username ? req.body.username : User.username;
-			User.email = req.body.email ? req.body.email : User.email;
-			User.password = req.body.password ? req.body.password : User.password;
-			
-            User.save(function (err, User) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating User.',
-                        error: err
-                    });
-                }
-
-                return res.json(User);
-            });
+    UserModel.findOne({ _id: id }, function (err, User) {
+      if (err) {
+        return res.status(500).json({
+          message: "Error when getting User",
+          error: err,
         });
-    },
+      }
 
-    /**
-     * UserController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        UserModel.findByIdAndRemove(id, function (err, User) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the User.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
+      if (!User) {
+        return res.status(404).json({
+          message: "No such User",
         });
-    }
+      }
+
+      User.username = req.body.username ? req.body.username : User.username;
+      User.email = req.body.email ? req.body.email : User.email;
+      User.password = req.body.password ? req.body.password : User.password;
+
+      User.save(function (err, User) {
+        if (err) {
+          return res.status(500).json({
+            message: "Error when updating User.",
+            error: err,
+          });
+        }
+
+        return res.json(User);
+      });
+    });
+  },
+
+  /**
+   * UserController.remove()
+   */
+  remove: function (req, res) {
+    var id = req.params.id;
+
+    UserModel.findByIdAndRemove(id, function (err, User) {
+      if (err) {
+        return res.status(500).json({
+          message: "Error when deleting the User.",
+          error: err,
+        });
+      }
+
+      return res.status(204).json();
+    });
+  },
 };
