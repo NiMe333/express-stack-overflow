@@ -1,9 +1,16 @@
 <h2 class="mb-4">Prijava</h2>
 
+{{#if error}}
+<div class="alert alert-danger">
+  {{error}}
+</div>
+{{/if}}
+
 <form method="POST" action="/auth/login" class="card p-4 shadow-sm">
+
   <div class="mb-3">
     <label>Email</label>
-    <input type="email" name="email" class="form-control" required />
+    <input type="email" name="email" value="{{email}}" class="form-control" required />
   </div>
 
   <div class="mb-3">

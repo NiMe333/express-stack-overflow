@@ -42,15 +42,19 @@ router.post("/login", async function (req, res) {
   var user = await UserModel.findOne({ email: email });
 
   if (!user) {
-    return res.send("Napačen email ali geslo.");
+    return res.render("auth/login", {
+      error: "Napačen email ali geslo.",
+      email: email,
+    });
   }
 
   var validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
-    return res.send("Napačen email ali geslo.");
+    return res.render("auth/login", {
+      error: "Napačen email ali geslo.",
+    });
   }
-
   req.session.user = {
     _id: user._id,
     username: user.username,

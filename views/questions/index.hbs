@@ -3,13 +3,13 @@
 <a href="/questions/new" class="btn btn-primary mb-3">+ Dodaj vprašanje</a>
 
 {{#if questions.length}}
-  {{#each questions}}
-    <div class="card mb-3 p-3 shadow-sm">
-      <h5>{{this.title}}</h5>
-      <p>{{this.description}}</p>
-      <small>{{this.date}}</small>
-    </div>
-  {{/each}}
+{{#each questions}}
+<div class="card mb-3 p-3 shadow-sm">
+  <h5>{{this.title}}</h5>
+  <p>{{this.description}}</p>
+  <small>{{this.formattedDate}}</small>
+</div>
+{{/each}}
 {{else}}
-  <p>Ni še vprašanj.</p>
+<p>Ni še vprašanj.</p>
 {{/if}}

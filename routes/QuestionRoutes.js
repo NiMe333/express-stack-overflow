@@ -7,6 +7,19 @@ router.get("/", async function (req, res) {
   try {
     var questions = await QuestionModel.find().sort({ date: -1 });
 
+    questions = questions.map(function (q) {
+      return {
+        ...q._doc,
+        formattedDate: new Date(q.date).toLocaleString("sl-SI", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+    });
+
     res.render("questions/index", { questions: questions });
   } catch (err) {
     res.send(err);
