@@ -40,10 +40,60 @@ router.post("/create", async function (req, res) {
       description: req.body.description,
       date: new Date(),
       user: req.session.user._id,
+      views: 0,
+      activity: 0,
     });
 
     await question.save();
     res.redirect("/questions");
+  } catch (err) {
+    res.send(err);
+  }
+});
+// GET hot questions
+router.get("/hot", async function (req, res) {
+  try {
+    var questions = await QuestionModel.find();
+
+    var hotQuestions = [];
+
+    for (var i = 0; i < questions.length; i++) {
+      var question = questions[i];
+
+      var answerCount = await AnswerModel.countDocuments({
+        question: question._id,
+      });
+
+      var hoursOld = (new Date() - new Date(question.date)) / (1000 * 60 * 60);
+
+      if (hoursOld < 1) {
+        hoursOld = 1;
+      }
+
+      var scorePerHour = (question.activity || 0) / hoursOld;
+
+      hotQuestions.push({
+        ...question._doc,
+        answerCount: answerCount,
+        activity: question.activity || 0,
+        hotScore: scorePerHour.toFixed(2),
+        formattedDate: new Date(question.date).toLocaleString("sl-SI", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      });
+    }
+
+    hotQuestions.sort(function (a, b) {
+      return b.hotScore - a.hotScore;
+    });
+
+    res.render("questions/hot", {
+      questions: hotQuestions,
+    });
   } catch (err) {
     res.send(err);
   }
@@ -53,7 +103,7 @@ router.post("/create", async function (req, res) {
 router.get("/:id", async function (req, res) {
   try {
     await QuestionModel.findByIdAndUpdate(req.params.id, {
-      $inc: { views: 1 },
+      $inc: { views: 1, activity: 1 },
     });
 
     var question = await QuestionModel.findById(req.params.id).populate("user");

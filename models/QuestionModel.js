@@ -13,6 +13,10 @@ var QuestionSchema = new Schema({
     type: Number,
     default: 0,
   },
+  activity: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Question", QuestionSchema);

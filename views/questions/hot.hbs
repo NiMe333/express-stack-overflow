@@ -1,0 +1,27 @@
+<h2 class="mb-4">🔥 Vroča vprašanja</h2>
+
+<a href="/questions" class="btn btn-secondary mb-3">Nazaj na vsa vprašanja</a>
+
+{{#if questions.length}}
+{{#each questions}}
+<div class="card mb-3 p-3 shadow-sm">
+    <h5>
+        <a href="/questions/{{this._id}}" class="text-decoration-none">
+            {{this.title}}
+        </a>
+    </h5>
+
+    <p>{{this.description}}</p>
+
+    <div class="d-flex gap-3 text-muted small">
+        <span>👁 Ogledi: {{this.views}}</span>
+        <span>💬 Odgovori: {{this.answerCount}}</span>
+        <span>🔥 Score/h: {{this.hotScore}}</span>
+    </div>
+
+    <small class="text-muted mt-2">{{this.formattedDate}}</small>
+</div>
+{{/each}}
+{{else}}
+<p>Ni še vročih vprašanj.</p>
+{{/if}}
