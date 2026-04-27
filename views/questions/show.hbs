@@ -1,0 +1,54 @@
+<div class="card p-4 shadow-sm mb-4">
+    <h2>{{question.title}}</h2>
+    <p>{{question.description}}</p>
+
+    {{#if question.user}}
+    <small class="text-muted">Objavil: {{question.user.username}}</small>
+    {{/if}}
+</div>
+
+<h4>Odgovori</h4>
+
+{{#if answers.length}}
+{{#each answers}}
+<div class="card p-3 mb-3 shadow-sm {{#if this.accepted}}border-success{{/if}}">
+    {{#if this.accepted}}
+    <span class="badge bg-success mb-2">Sprejet odgovor</span>
+    {{/if}}
+
+    <p>{{this.content}}</p>
+
+    <small class="text-muted">
+        {{#if this.user}}
+        Odgovoril: {{this.user.username}} |
+        {{/if}}
+        {{this.formattedDate}}
+    </small>
+
+    {{#if ../isOwner}}
+    {{#unless this.accepted}}
+    <form method="POST" action="/answers/accept/{{this._id}}" class="mt-2">
+        <button class="btn btn-outline-success btn-sm">
+            Sprejmi kot pravilen odgovor
+        </button>
+    </form>
+    {{/unless}}
+    {{/if}}
+</div>
+{{/each}}
+{{else}}
+<p>Ni še odgovorov.</p>
+{{/if}}
+
+<hr>
+
+<h4>Dodaj odgovor</h4>
+
+<form method="POST" action="/answers/create/{{question._id}}" class="card p-4 shadow-sm">
+    <div class="mb-3">
+        <label>Odgovor</label>
+        <textarea name="content" class="form-control" required></textarea>
+    </div>
+
+    <button class="btn btn-primary">Objavi odgovor</button>
+</form>

@@ -1,30 +1,55 @@
 var express = require("express");
 var router = express.Router();
-var AnswerController = require("../controllers/AnswerController.js");
+var AnswerModel = require("../models/AnswerModel");
 
-/*
- * GET
- */
-router.get("/", AnswerController.list);
+// POST create answer
+router.post("/create/:questionId", async function (req, res) {
+  try {
+    var answer = new AnswerModel({
+      content: req.body.content,
+      date: new Date(),
+      user: req.session.user._id,
+      question: req.params.questionId,
+      accepted: false,
+    });
 
-/*
- * GET
- */
-router.get("/:id", AnswerController.show);
+    await answer.save();
 
-/*
- * POST
- */
-router.post("/", AnswerController.create);
+    res.redirect("/questions/" + req.params.questionId);
+  } catch (err) {
+    res.send(err);
+  }
+});
 
-/*
- * PUT
- */
-router.put("/:id", AnswerController.update);
+// POST accept answer
+router.post("/accept/:answerId", async function (req, res) {
+  try {
+    var answer = await AnswerModel.findById(req.params.answerId).populate(
+      "question",
+    );
 
-/*
- * DELETE
- */
-router.delete("/:id", AnswerController.remove);
+    if (!answer) {
+      return res.send("Odgovor ne obstaja.");
+    }
+
+    var question = answer.question;
+
+    if (question.user.toString() !== req.session.user._id.toString()) {
+      return res.send("Nimaš dovoljenja za sprejem tega odgovora.");
+    }
+
+    await AnswerModel.updateMany(
+      { question: question._id },
+      { accepted: false },
+    );
+
+    answer.accepted = true;
+    await answer.save();
+
+    res.redirect("/questions/" + question._id);
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 module.exports = router;

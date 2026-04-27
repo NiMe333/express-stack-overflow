@@ -5,9 +5,13 @@
 {{#if questions.length}}
 {{#each questions}}
 <div class="card mb-3 p-3 shadow-sm">
-  <h5>{{this.title}}</h5>
+  <h5>
+    <a href="/questions/{{this._id}}" class="text-decoration-none">
+      {{this.title}}
+    </a>
+  </h5>
   <p>{{this.description}}</p>
-  <small>{{this.formattedDate}}</small>
+  <small class="text-muted">{{this.formattedDate}}</small>
 </div>
 {{/each}}
 {{else}}

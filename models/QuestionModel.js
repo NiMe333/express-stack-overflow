@@ -9,6 +9,10 @@ var QuestionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  views: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Question", QuestionSchema);
