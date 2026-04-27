@@ -5,11 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 require('dotenv').config();
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var questionRouter = require('./routes/QuestionRoutes');
 var answerRouter = require('./routes/AnswerRoutes');
 var userRouter = require('./routes/UserRoutes');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -30,27 +32,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(function(req, res, next) {
+  res.locals.user = req.session.user;
+  next();
+});
+
 app.use('/', indexRouter);
 
 app.use('/questions', questionRouter);
 app.use('/answers', answerRouter);
 app.use('/user', userRouter);
-
-app.get('/db-test', async (req, res) => {
-  try {
-    const result = await mongoose.connection.db.admin().ping();
-
-    res.json({
-      message: 'MongoDB Atlas connection works',
-      result
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: 'MongoDB Atlas connection failed',
-      error: err.message
-    });
-  }
-});
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
