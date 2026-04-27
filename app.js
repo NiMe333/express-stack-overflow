@@ -38,25 +38,32 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.user = req.session.user;
   next();
 });
 
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.redirect('/auth/login');
+  }
+  next();
+}
+
 app.use('/', indexRouter);
 
-app.use('/questions', questionRouter);
-app.use('/answers', answerRouter);
-app.use('/user', userRouter);
+app.use('/questions', requireLogin, questionRouter);
+app.use('/answers', requireLogin, answerRouter);
+app.use('/user', requireLogin, userRouter);
 app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
