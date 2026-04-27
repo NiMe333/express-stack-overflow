@@ -1,10 +1,6 @@
 <html>
 
   <head>
-    {{#if user}}
-      <p>Prijavljen kot: {{user.username}}</p>
-      <a href="/auth/logout">Logout</a>
-    {{/if}}
     <title>{{title}}</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link
@@ -16,7 +12,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="/">Q&A App</a>
+        <a class="navbar-brand" href="/">Stack overflow app</a>
 
         <div>
           {{#if user}}

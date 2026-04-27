@@ -1,0 +1,15 @@
+<h2 class="mb-4">Novo vprašanje</h2>
+
+<form method="POST" action="/questions/create" class="card p-4 shadow-sm">
+  <div class="mb-3">
+    <label>Naslov</label>
+    <input type="text" name="title" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label>Opis</label>
+    <textarea name="description" class="form-control" required></textarea>
+  </div>
+
+  <button class="btn btn-success">Objavi vprašanje</button>
+</form>

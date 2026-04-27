@@ -1,30 +1,39 @@
 var express = require("express");
 var router = express.Router();
-var QuestionController = require("../controllers/QuestionController.js");
+var QuestionModel = require("../models/QuestionModel");
 
-/*
- * GET
- */
-router.get("/", QuestionController.list);
+// GET all questions
+router.get("/", async function (req, res) {
+  try {
+    var questions = await QuestionModel.find().sort({ date: -1 });
 
-/*
- * GET
- */
-router.get("/:id", QuestionController.show);
+    res.render("questions/index", { questions: questions });
+  } catch (err) {
+    res.send(err);
+  }
+});
 
-/*
- * POST
- */
-router.post("/", QuestionController.create);
+// GET create form
+router.get("/new", function (req, res) {
+  res.render("questions/new");
+});
 
-/*
- * PUT
- */
-router.put("/:id", QuestionController.update);
+// POST create question
+router.post("/create", async function (req, res) {
+  try {
+    var question = new QuestionModel({
+      title: req.body.title,
+      description: req.body.description,
+      date: new Date(),
+      user: req.session.user._id,
+    });
 
-/*
- * DELETE
- */
-router.delete("/:id", QuestionController.remove);
+    await question.save();
+
+    res.redirect("/questions");
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 module.exports = router;
