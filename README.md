@@ -99,24 +99,24 @@ UserRoutes.js
 npm install
 ```
 
-###Run the Application
+### Run the Application
 ```bash
 npm start
 ```
 
-###App runs at:
+### App runs at:
 ```bash
 
 http://localhost:3000
 ```
-###MongoDB Setup
+### MongoDB Setup
 create .env file 
 ```
 MONGO_URI=your_mongodb_connection_string
 PORT=3000
 ```
 
-##Important
+## Important
 
 Use this mongoose version (required for compatibility):
 ```
