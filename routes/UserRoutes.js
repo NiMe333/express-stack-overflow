@@ -6,6 +6,7 @@ var UserModel = require("../models/UserModel");
 var QuestionModel = require("../models/QuestionModel");
 var AnswerModel = require("../models/AnswerModel");
 
+// Prikaz javnega profila uporabnika
 router.get("/profile/:id", async function (req, res) {
   try {
     var user = await UserModel.findById(req.params.id);
@@ -34,29 +35,11 @@ router.get("/profile/:id", async function (req, res) {
   }
 });
 
-/*
- * GET
- */
+// Generirani route-i za uporabnike
 router.get("/", UserController.list);
-
-/*
- * GET
- */
 router.get("/:id", UserController.show);
-
-/*
- * POST
- */
 router.post("/", UserController.create);
-
-/*
- * PUT
- */
 router.put("/:id", UserController.update);
-
-/*
- * DELETE
- */
 router.delete("/:id", UserController.remove);
 
 module.exports = router;

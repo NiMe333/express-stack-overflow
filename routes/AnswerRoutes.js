@@ -49,7 +49,7 @@ router.post("/accept/:answerId", async function (req, res) {
     answer.accepted = true;
     await answer.save();
 
-    // povečaj aktivnost (sprejem = manjši boost)
+    // povečaj aktivnost
     await QuestionModel.findByIdAndUpdate(question._id, {
       $inc: { activity: 1 },
     });

@@ -3,10 +3,12 @@ var router = express.Router();
 var bcrypt = require("bcrypt");
 var UserModel = require("../models/UserModel");
 
+// Prikaz registracije
 router.get("/register", function (req, res) {
   res.render("auth/register");
 });
 
+// Registracija uporabnika
 router.post("/register", async function (req, res) {
   var username = req.body.username;
   var email = req.body.email;
@@ -18,6 +20,7 @@ router.post("/register", async function (req, res) {
     return res.send("Uporabnik s tem emailom že obstaja.");
   }
 
+  // hash gesla
   var hashedPassword = await bcrypt.hash(password, 10);
 
   var user = new UserModel({
@@ -31,10 +34,12 @@ router.post("/register", async function (req, res) {
   res.redirect("/auth/login");
 });
 
+// Prikaz login forme
 router.get("/login", function (req, res) {
   res.render("auth/login");
 });
 
+// Prijava uporabnika
 router.post("/login", async function (req, res) {
   var email = req.body.email;
   var password = req.body.password;
@@ -48,6 +53,7 @@ router.post("/login", async function (req, res) {
     });
   }
 
+  // preverjanje gesla
   var validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword) {
@@ -55,6 +61,8 @@ router.post("/login", async function (req, res) {
       error: "Napačen email ali geslo.",
     });
   }
+
+  // shranimo uporabnika v session
   req.session.user = {
     _id: user._id,
     username: user.username,
@@ -65,6 +73,7 @@ router.post("/login", async function (req, res) {
   res.redirect("/questions");
 });
 
+// Odjava
 router.get("/logout", function (req, res) {
   req.session.destroy();
   res.redirect("/");

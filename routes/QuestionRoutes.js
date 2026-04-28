@@ -3,13 +3,14 @@ var router = express.Router();
 var QuestionModel = require("../models/QuestionModel");
 var AnswerModel = require("../models/AnswerModel");
 
-// GET all questions
+// Prikaz vseh vprašanj
 router.get("/", async function (req, res) {
   try {
     var questions = await QuestionModel.find()
       .populate("user")
       .sort({ date: -1 });
 
+    // format datuma za prikaz
     questions = questions.map(function (q) {
       return {
         ...q._doc,
@@ -29,12 +30,12 @@ router.get("/", async function (req, res) {
   }
 });
 
-// GET create form
+// Forma za novo vprašanje
 router.get("/new", function (req, res) {
   res.render("questions/new");
 });
 
-// POST create question
+// Ustvarjanje vprašanja
 router.post("/create", async function (req, res) {
   try {
     var question = new QuestionModel({
@@ -52,11 +53,11 @@ router.post("/create", async function (req, res) {
     res.send(err);
   }
 });
-// GET hot questions
+
+// Vroča vprašanja (aktivnost / čas)
 router.get("/hot", async function (req, res) {
   try {
     var questions = await QuestionModel.find();
-
     var hotQuestions = [];
 
     for (var i = 0; i < questions.length; i++) {
@@ -67,10 +68,7 @@ router.get("/hot", async function (req, res) {
       });
 
       var hoursOld = (new Date() - new Date(question.date)) / (1000 * 60 * 60);
-
-      if (hoursOld < 1) {
-        hoursOld = 1;
-      }
+      if (hoursOld < 1) hoursOld = 1;
 
       var scorePerHour = (question.activity || 0) / hoursOld;
 
@@ -89,13 +87,10 @@ router.get("/hot", async function (req, res) {
       });
     }
 
+    // filtriraj + sortiraj + vzemi top 5
     hotQuestions = hotQuestions
-      .filter(function (q) {
-        return parseFloat(q.hotScore) > 3;
-      })
-      .sort(function (a, b) {
-        return b.hotScore - a.hotScore;
-      })
+      .filter((q) => parseFloat(q.hotScore) > 3)
+      .sort((a, b) => b.hotScore - a.hotScore)
       .slice(0, 5);
 
     res.render("questions/hot", {
@@ -106,9 +101,10 @@ router.get("/hot", async function (req, res) {
   }
 });
 
-// GET single question + answers
+// Prikaz posameznega vprašanja + odgovori
 router.get("/:id", async function (req, res) {
   try {
+    // povečaj oglede in aktivnost
     await QuestionModel.findByIdAndUpdate(req.params.id, {
       $inc: { views: 1, activity: 1 },
     });
@@ -119,6 +115,7 @@ router.get("/:id", async function (req, res) {
       .populate("user")
       .sort({ accepted: -1, date: -1 });
 
+    // format datuma za odgovore
     answers = answers.map(function (a) {
       return {
         ...a._doc,
@@ -132,6 +129,7 @@ router.get("/:id", async function (req, res) {
       };
     });
 
+    // preveri ali je uporabnik lastnik vprašanja
     var isOwner =
       question.user._id.toString() === req.session.user._id.toString();
 
