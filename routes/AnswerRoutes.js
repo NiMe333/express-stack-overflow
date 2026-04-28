@@ -16,9 +16,9 @@ router.post("/create/:questionId", async function (req, res) {
 
     await answer.save();
 
-    // povečaj aktivnost vprašanja (odgovor = +3)
+    // povečaj aktivnost vprašanja
     await QuestionModel.findByIdAndUpdate(req.params.questionId, {
-      $inc: { activity: 3 },
+      $inc: { activity: 1 },
     });
 
     res.redirect("/questions/" + req.params.questionId);
