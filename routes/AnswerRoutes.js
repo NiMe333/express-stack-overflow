@@ -45,12 +45,6 @@ router.post("/accept/:answerId", async function (req, res) {
       return res.send("Nimaš dovoljenja za sprejem tega odgovora.");
     }
 
-    // odstrani accepted iz vseh odgovorov
-    await AnswerModel.updateMany(
-      { question: question._id },
-      { accepted: false },
-    );
-
     // nastavi tega kot accepted
     answer.accepted = true;
     await answer.save();

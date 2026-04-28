@@ -6,7 +6,9 @@ var AnswerModel = require("../models/AnswerModel");
 // GET all questions
 router.get("/", async function (req, res) {
   try {
-    var questions = await QuestionModel.find().sort({ date: -1 });
+    var questions = await QuestionModel.find()
+      .populate("user")
+      .sort({ date: -1 });
 
     questions = questions.map(function (q) {
       return {
@@ -87,9 +89,14 @@ router.get("/hot", async function (req, res) {
       });
     }
 
-    hotQuestions.sort(function (a, b) {
-      return b.hotScore - a.hotScore;
-    });
+    hotQuestions = hotQuestions
+      .filter(function (q) {
+        return parseFloat(q.hotScore) > 3;
+      })
+      .sort(function (a, b) {
+        return b.hotScore - a.hotScore;
+      })
+      .slice(0, 5);
 
     res.render("questions/hot", {
       questions: hotQuestions,
