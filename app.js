@@ -25,24 +25,24 @@ mongoose
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "hbs");
+app.set("view engine", "hbs"); // uses Handlebars
 
-app.use(logger("dev"));
+app.use(logger("dev")); // log in terminal
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); // Za POST form
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
     secret: "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
+    resave: false, // ne shranjuje sessiona, če ni sprememb
+    saveUninitialized: false, // ne ustvari praznih sej
   }),
 );
 
 app.use(function (req, res, next) {
-  res.locals.user = req.session.user;
+  res.locals.user = req.session.user; // globalno shranim user-ja
   next();
 });
 

@@ -7,7 +7,7 @@ var UserModel = require("../models/UserModel.js");
  */
 module.exports = {
   /**
-   * UserController.list()
+   * UserController.list() -> GET vsi uporabniki
    */
   list: function (req, res) {
     UserModel.find(function (err, Users) {
@@ -23,7 +23,7 @@ module.exports = {
   },
 
   /**
-   * UserController.show()
+   * UserController.show() -> GET en uporabnik
    */
   show: function (req, res) {
     var id = req.params.id;
@@ -47,7 +47,7 @@ module.exports = {
   },
 
   /**
-   * UserController.create()
+   * UserController.create() -> POST nov user
    */
   create: function (req, res) {
     var User = new UserModel({
@@ -69,7 +69,7 @@ module.exports = {
   },
 
   /**
-   * UserController.update()
+   * UserController.update() -> PUT update userja
    */
   update: function (req, res) {
     var id = req.params.id;
